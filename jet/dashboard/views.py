@@ -43,10 +43,10 @@ class UpdateDashboardModuleView(SuccessMessageMixin, UpdateView):
         }
 
         if self.request.method in ('POST', 'PUT'):
-            kwargs.update({
+            kwargs |= {
                 'data': self.request.POST,
                 'files': self.request.FILES,
-            })
+            }
         return kwargs
 
     def get_settings_form(self):
@@ -63,10 +63,10 @@ class UpdateDashboardModuleView(SuccessMessageMixin, UpdateView):
         }
 
         if self.request.method in ('POST', 'PUT'):
-            kwargs.update({
+            kwargs |= {
                 'data': self.request.POST,
                 'files': self.request.FILES,
-            })
+            }
         return kwargs
 
     def get_children_formset(self):

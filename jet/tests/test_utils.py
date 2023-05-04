@@ -59,10 +59,10 @@ class UtilsTestCase(TestCase):
         encoder = LazyDateTimeEncoder()
 
         ts = datetime.now()
-        self.assertEqual(encoder.encode(ts), '"%s"' % ts.isoformat())
+        self.assertEqual(encoder.encode(ts), f'"{ts.isoformat()}"')
 
         ts = date(2015, 5, 3)
-        self.assertEqual(encoder.encode(ts), '"%s"' % ts.isoformat())
+        self.assertEqual(encoder.encode(ts), f'"{ts.isoformat()}"')
 
     def test_lazy_date_time_encoder_dict(self):
         encoder = LazyDateTimeEncoder()
