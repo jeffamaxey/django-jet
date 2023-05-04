@@ -11,11 +11,11 @@ def add_bookmark_view(request):
 
     if form.is_valid():
         bookmark = form.save()
-        result.update({
+        result |= {
             'id': bookmark.pk,
             'title': bookmark.title,
-            'url': bookmark.url
-        })
+            'url': bookmark.url,
+        }
     else:
         result['error'] = True
 

@@ -33,9 +33,7 @@ class UserDashboardModule(models.Model):
             module = getattr(package, module_name)
 
             return module
-        except AttributeError:
-            return None
-        except ImportError:
+        except (AttributeError, ImportError):
             return None
 
     def pop_settings(self, pop_settings):

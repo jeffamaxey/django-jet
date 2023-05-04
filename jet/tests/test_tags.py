@@ -11,15 +11,15 @@ from django.test.client import RequestFactory
 
 class TagsTestCase(TestCase):
     def setUp(self):
-        self.models = []
         self.searchable_models = []
 
-        self.models.append(TestModel.objects.create(field1='first', field2=1))
+        self.models = [TestModel.objects.create(field1='first', field2=1)]
         self.models.append(TestModel.objects.create(field1='second', field2=2))
         self.searchable_models.append(SearchableTestModel.objects.create(field1='first', field2=1))
         self.searchable_models.append(SearchableTestModel.objects.create(field1='second', field2=2))
 
     def test_select2_lookups(self):
+
         class TestForm(forms.Form):
             form_field = forms.ModelChoiceField(SearchableTestModel.objects)
 
@@ -28,12 +28,13 @@ class TagsTestCase(TestCase):
         form = TestForm(initial={'form_field': value.pk})
         field = form['form_field']
         field = jet_select2_lookups(field)
-        choices = [choice for choice in field.field.choices]
+        choices = list(field.field.choices)
 
         self.assertEqual(len(choices), 1)
         self.assertEqual(choices[0][0], value.pk)
 
     def test_select2_lookups_posted(self):
+
         class TestForm(forms.Form):
             form_field = forms.ModelChoiceField(SearchableTestModel.objects)
 
@@ -42,12 +43,13 @@ class TagsTestCase(TestCase):
         form = TestForm(data={'form_field': value.pk})
         field = form['form_field']
         field = jet_select2_lookups(field)
-        choices = [choice for choice in field.field.choices]
+        choices = list(field.field.choices)
 
         self.assertEqual(len(choices), 1)
         self.assertEqual(choices[0][0], value.pk)
 
     def test_non_select2_lookups(self):
+
         class TestForm(forms.Form):
             form_field = forms.ModelChoiceField(TestModel.objects)
 
@@ -56,7 +58,7 @@ class TagsTestCase(TestCase):
         form = TestForm(initial={'form_field': value.pk})
         field = form['form_field']
         field = jet_select2_lookups(field)
-        choices = [choice for choice in field.field.choices]
+        choices = list(field.field.choices)
 
         self.assertEqual(len(choices), len(self.models) + 1)
 
@@ -65,10 +67,13 @@ class TagsTestCase(TestCase):
         ordering_field = 1  # field1 in list_display
         preserved_filters = '_changelist_filters=o%%3D%d' % ordering_field
 
-        expected_url = reverse('admin:%s_%s_change' % (
-            TestModel._meta.app_label,
-            TestModel._meta.model_name
-        ), args=(self.models[1].pk,)) + '?' + preserved_filters
+        expected_url = (
+            reverse(
+                f'admin:{TestModel._meta.app_label}_{TestModel._meta.model_name}_change',
+                args=(self.models[1].pk,),
+            )
+            + '?'
+        ) + preserved_filters
 
         context = {
             'original': instance,
@@ -85,10 +90,13 @@ class TagsTestCase(TestCase):
         ordering_field = 1  # field1 in list_display
         preserved_filters = '_changelist_filters=o%%3D%d' % ordering_field
 
-        changelist_url = reverse('admin:%s_%s_change' % (
-            TestModel._meta.app_label,
-            TestModel._meta.model_name
-        ), args=(self.models[1].pk,)) + '?' + preserved_filters
+        changelist_url = (
+            reverse(
+                f'admin:{TestModel._meta.app_label}_{TestModel._meta.model_name}_change',
+                args=(self.models[1].pk,),
+            )
+            + '?'
+        ) + preserved_filters
 
         context = {
             'original': instance,
